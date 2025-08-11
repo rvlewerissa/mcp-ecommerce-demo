@@ -4,7 +4,9 @@ async function searchTokopediaScrape(
   preorder = false,
   ready_stock = true,
   condition = null,
-  order_by = 'relevant'
+  order_by = 'relevant',
+  min_price = null,
+  max_price = null
 ) {
   const { addExtra } = await import('playwright-extra');
   const { chromium } = await import('playwright');
@@ -49,6 +51,14 @@ async function searchTokopediaScrape(
     };
     const obValue = orderByMapping[order_by] || '23';
     searchUrl.searchParams.set('ob', obValue);
+    
+    // Set price filters
+    if (min_price !== null && min_price !== undefined) {
+      searchUrl.searchParams.set('pmin', min_price.toString());
+    }
+    if (max_price !== null && max_price !== undefined) {
+      searchUrl.searchParams.set('pmax', max_price.toString());
+    }
 
     await page.goto(searchUrl.toString(), {
       waitUntil: 'networkidle',
