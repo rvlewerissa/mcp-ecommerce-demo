@@ -104,7 +104,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     try {
-      const scrapedProducts = await searchTokopediaScrape(
+      const scrapedProducts = await searchTokopediaScrape({
         query,
         discount,
         preorder,
@@ -112,8 +112,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         condition,
         order_by,
         min_price,
-        max_price
-      );
+        max_price,
+      });
 
       return {
         content: [

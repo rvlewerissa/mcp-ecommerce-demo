@@ -1,4 +1,4 @@
-async function searchTokopediaScrape(
+async function searchTokopediaScrape({
   query = 'laptop',
   discount = false,
   preorder = false,
@@ -6,8 +6,8 @@ async function searchTokopediaScrape(
   condition = null,
   order_by = 'relevant',
   min_price = null,
-  max_price = null
-) {
+  max_price = null,
+}) {
   const { addExtra } = await import('playwright-extra');
   const { chromium } = await import('playwright');
   const StealthPlugin = (await import('puppeteer-extra-plugin-stealth'))
@@ -40,18 +40,18 @@ async function searchTokopediaScrape(
     if (condition) {
       searchUrl.searchParams.set('condition', condition.toString());
     }
-    
+
     // Set order by parameter
     const orderByMapping = {
-      'relevant': '23',
-      'rating': '5',
-      'newest': '9',
-      'highest_price': '4',
-      'lowest_price': '3'
+      relevant: '23',
+      rating: '5',
+      newest: '9',
+      highest_price: '4',
+      lowest_price: '3',
     };
     const obValue = orderByMapping[order_by] || '23';
     searchUrl.searchParams.set('ob', obValue);
-    
+
     // Set price filters
     if (min_price !== null && min_price !== undefined) {
       searchUrl.searchParams.set('pmin', min_price.toString());
@@ -136,7 +136,7 @@ async function searchTokopediaScrape(
 
 // Run the test
 if (import.meta.url === `file://${process.argv[1]}`) {
-  searchTokopediaScrape()
+  searchTokopediaScrape({})
     .then((products) => {
       console.log(products);
       process.exit(0);
