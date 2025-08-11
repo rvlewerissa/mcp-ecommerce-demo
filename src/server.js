@@ -44,6 +44,16 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: 'boolean',
               description: 'Filter to show only ready stock products (opposite of preorder)',
             },
+            condition: {
+              type: 'number',
+              description: 'Filter by item condition: 1 for new items, 2 for used items',
+              enum: [1, 2],
+            },
+            order_by: {
+              type: 'string',
+              description: 'Order search results by criteria',
+              enum: ['relevant', 'rating', 'newest', 'highest_price', 'lowest_price'],
+            },
           },
         },
       },
@@ -55,7 +65,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments } = request.params;
 
   if (name === 'search_product') {
-    const { query, discount, preorder, ready_stock } = arguments || {};
+    const { query, discount, preorder, ready_stock, condition, order_by } = arguments || {};
 
     if (!query) {
       return {
@@ -69,7 +79,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     try {
-      const scrapedProducts = await searchTokopediaScrape(query, discount, preorder, ready_stock);
+      const scrapedProducts = await searchTokopediaScrape(query, discount, preorder, ready_stock, condition, order_by);
 
       return {
         content: [

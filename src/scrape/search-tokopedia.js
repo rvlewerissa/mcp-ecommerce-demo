@@ -2,7 +2,9 @@ async function searchTokopediaScrape(
   query = 'laptop',
   discount = false,
   preorder = false,
-  ready_stock = true
+  ready_stock = true,
+  condition = null,
+  order_by = 'relevant'
 ) {
   const { addExtra } = await import('playwright-extra');
   const { chromium } = await import('playwright');
@@ -33,6 +35,20 @@ async function searchTokopediaScrape(
     if (preorder) {
       searchUrl.searchParams.set('preorder', 'true');
     }
+    if (condition) {
+      searchUrl.searchParams.set('condition', condition.toString());
+    }
+    
+    // Set order by parameter
+    const orderByMapping = {
+      'relevant': '23',
+      'rating': '5',
+      'newest': '9',
+      'highest_price': '4',
+      'lowest_price': '3'
+    };
+    const obValue = orderByMapping[order_by] || '23';
+    searchUrl.searchParams.set('ob', obValue);
 
     await page.goto(searchUrl.toString(), {
       waitUntil: 'networkidle',
