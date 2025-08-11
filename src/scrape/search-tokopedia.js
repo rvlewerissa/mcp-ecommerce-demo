@@ -1,4 +1,9 @@
-async function searchTokopediaScrape(query = 'laptop', discount = true) {
+async function searchTokopediaScrape(
+  query = 'laptop',
+  discount = false,
+  preorder = false,
+  ready_stock = true
+) {
   const { addExtra } = await import('playwright-extra');
   const { chromium } = await import('playwright');
   const StealthPlugin = (await import('puppeteer-extra-plugin-stealth'))
@@ -21,6 +26,12 @@ async function searchTokopediaScrape(query = 'laptop', discount = true) {
     searchUrl.searchParams.set('q', query);
     if (discount) {
       searchUrl.searchParams.set('is_discount', 'true');
+    }
+    if (ready_stock) {
+      searchUrl.searchParams.set('preorder', 'false');
+    }
+    if (preorder) {
+      searchUrl.searchParams.set('preorder', 'true');
     }
 
     await page.goto(searchUrl.toString(), {
