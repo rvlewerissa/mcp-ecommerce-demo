@@ -2,19 +2,24 @@
   "name": "mcp-ecommerce-demo",
   "version": "1.0.0",
   "description": "Simple ecommerce MCP server demo",
-  "main": "src/server.ts",
+  "type": "module",
+  "main": "src/server.js",
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "node src/server.js",
     "build": "tsc",
-    "dev": "ts-node src/server.ts"
+    "dev": "node src/server.js",
+    "test-scrape": "node src/scrape/search-tokopedia.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0"
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "playwright": "^1.54.2",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "ts-node": "^10.0.0"
+    "ts-node": "^10.0.0",
+    "typescript": "^5.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
