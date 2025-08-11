@@ -32,6 +32,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               description:
                 'Search query to match against product name or description',
             },
+            discount: {
+              type: 'boolean',
+              description: 'Filter to show only discounted products',
+            },
           },
         },
       },
@@ -40,10 +44,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 });
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params;
+  const { name, arguments } = request.params;
 
   if (name === 'search_product') {
-    const { query } = args || {};
+    const { query, discount } = arguments || {};
 
     if (!query) {
       return {
@@ -57,7 +61,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     try {
-      const scrapedProducts = await searchTokopediaScrape(query);
+      const scrapedProducts = await searchTokopediaScrape(query, discount);
 
       return {
         content: [

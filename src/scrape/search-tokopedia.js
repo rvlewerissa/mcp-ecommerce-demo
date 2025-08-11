@@ -1,4 +1,4 @@
-async function searchTokopediaScrape(query = 'laptop') {
+async function searchTokopediaScrape(query = 'laptop', discount = true) {
   const { addExtra } = await import('playwright-extra');
   const { chromium } = await import('playwright');
   const StealthPlugin = (await import('puppeteer-extra-plugin-stealth'))
@@ -17,13 +17,16 @@ async function searchTokopediaScrape(query = 'laptop') {
     const page = await context.newPage();
 
     // Navigate to Tokopedia search page
-    await page.goto(
-      `https://www.tokopedia.com/search?q=${encodeURIComponent(query)}`,
-      {
-        waitUntil: 'networkidle',
-        timeout: 30000,
-      }
-    );
+    const searchUrl = new URL('https://www.tokopedia.com/search');
+    searchUrl.searchParams.set('q', query);
+    if (discount) {
+      searchUrl.searchParams.set('is_discount', 'true');
+    }
+
+    await page.goto(searchUrl.toString(), {
+      waitUntil: 'networkidle',
+      timeout: 30000,
+    });
 
     // Wait for search results to load
     await page.waitForSelector('[data-testid="divSRPContentProducts"]', {
