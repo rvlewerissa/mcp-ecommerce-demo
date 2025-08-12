@@ -78,7 +78,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 });
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments } = request.params;
+  const { name, arguments: args } = request.params;
 
   if (name === 'search_product') {
     const {
@@ -90,7 +90,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       order_by,
       min_price,
       max_price,
-    } = arguments || {};
+    } = args || {};
 
     if (!query) {
       return {
