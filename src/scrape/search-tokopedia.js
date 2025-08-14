@@ -1,7 +1,9 @@
 import { firefox } from 'playwright';
 import { CamoufoxServer } from '../camoufox/CamoufoxServer.js';
 
-async function searchTokopediaScrape({
+import { gradualScrollToBottom } from '../utils/scrollUtils.js';
+
+async function searchTokopedia({
   query = 'laptop',
   discount = false,
   preorder = false,
@@ -12,7 +14,7 @@ async function searchTokopediaScrape({
   max_price = null,
 }) {
   const server = new CamoufoxServer({
-    headless: false,
+    headless: true,
     humanize: true,
     debug: false,
   });
@@ -69,6 +71,9 @@ async function searchTokopediaScrape({
       timeout: 15000,
     });
 
+    // Scroll gradually to bottom to trigger lazy loading
+    await gradualScrollToBottom(page);
+
     // Extract product data
     const products = await page.evaluate(() => {
       const container = document.querySelector(
@@ -110,7 +115,6 @@ async function searchTokopediaScrape({
               });
             }
           } catch (error) {
-            console.log('Error processing product card:', error.message);
             continue;
           }
         }
@@ -133,17 +137,4 @@ async function searchTokopediaScrape({
   }
 }
 
-// Run the test
-if (import.meta.url === `file://${process.argv[1]}`) {
-  searchTokopediaScrape({})
-    .then((products) => {
-      console.log(products);
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.log(error);
-      process.exit(1);
-    });
-}
-
-export { searchTokopediaScrape };
+export { searchTokopedia };

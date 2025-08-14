@@ -7,9 +7,8 @@ async function auth({ email, password, sessionManager } = {}) {
     humanize: true,
     debug: false,
   });
+  let sessionStored = false;
   try {
-    let sessionStored = false;
-
     const sessionId = `auth_${Date.now()}_${Math.random()
       .toString(36)
       .substr(2, 9)}`;
@@ -67,6 +66,7 @@ async function auth({ email, password, sessionManager } = {}) {
         email,
         type: 'verification_pending',
       });
+      sessionStored = true;
 
       return {
         success: false,
@@ -74,13 +74,6 @@ async function auth({ email, password, sessionManager } = {}) {
         sessionId,
         message:
           'Please provide the verification code using the provide_verification_code tool with this session ID',
-      };
-
-      return {
-        success: false,
-        needsVerification: true,
-        message:
-          'Please provide the verification code sent to your email or phone',
       };
     } else {
       // Update the existing session type to authenticated
@@ -91,6 +84,7 @@ async function auth({ email, password, sessionManager } = {}) {
         email,
         type: 'authenticated',
       });
+      sessionStored = true;
 
       return {
         success: true,
@@ -99,8 +93,6 @@ async function auth({ email, password, sessionManager } = {}) {
         sessionId: sessionId,
       };
     }
-
-    sessionStored = true;
 
     return {
       success: true,
@@ -173,11 +165,6 @@ async function verificationCode({
     await server.stop();
     throw error;
   }
-}
-
-// Run if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  auth().catch(console.error);
 }
 
 export { auth, verificationCode };

@@ -90,12 +90,15 @@ export class CamoufoxServer extends EventEmitter {
     if (this.#signalHandlersSetup) return;
     
     const handleShutdown = async (signal) => {
-      this.#debug(`Received ${signal}, shutting down CamoufoxServer...`);
+      console.error(`CamoufoxServer received ${signal}, shutting down...`);
       try {
         await this.stop();
+        console.error('CamoufoxServer shutdown complete');
       } catch (error) {
-        this.#debug(`Error during ${signal} shutdown: ${error.message}`);
+        console.error(`CamoufoxServer shutdown error: ${error.message}`);
       }
+      // Exit the process to ensure cleanup
+      process.exit(0);
     };
 
     process.on('SIGINT', handleShutdown);
