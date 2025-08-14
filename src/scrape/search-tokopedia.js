@@ -1,3 +1,6 @@
+import { firefox } from 'playwright';
+import { CamoufoxServer } from '../camoufox/CamoufoxServer.js';
+
 async function searchTokopediaScrape({
   query = 'laptop',
   discount = false,
@@ -8,22 +11,18 @@ async function searchTokopediaScrape({
   min_price = null,
   max_price = null,
 }) {
-  const { addExtra } = await import('playwright-extra');
-  const { chromium } = await import('playwright');
-  const StealthPlugin = (await import('puppeteer-extra-plugin-stealth'))
-    .default;
-
-  // Add stealth plugin to playwright
-  const playwrightExtra = addExtra(chromium);
-  playwrightExtra.use(StealthPlugin());
-
-  const browser = await playwrightExtra.launch({
-    headless: true,
+  const server = new CamoufoxServer({
+    headless: false,
+    humanize: true,
+    debug: false,
   });
 
   try {
-    const context = await browser.newContext();
-    const page = await context.newPage();
+    const wsEndpoint = await server.start();
+    const browser = await firefox.connect(wsEndpoint);
+    server.setBrowser(browser);
+
+    const page = await browser.newPage();
 
     // Navigate to Tokopedia search page
     const searchUrl = new URL('https://www.tokopedia.com/search');
@@ -62,12 +61,12 @@ async function searchTokopediaScrape({
 
     await page.goto(searchUrl.toString(), {
       waitUntil: 'networkidle',
-      timeout: 30000,
+      timeout: 15000,
     });
 
     // Wait for search results to load
     await page.waitForSelector('[data-testid="divSRPContentProducts"]', {
-      timeout: 10000,
+      timeout: 15000,
     });
 
     // Extract product data
@@ -128,8 +127,8 @@ async function searchTokopediaScrape({
       products: [],
     };
   } finally {
-    if (browser) {
-      await browser.close();
+    if (server) {
+      await server.stop();
     }
   }
 }
