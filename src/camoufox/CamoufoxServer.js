@@ -57,6 +57,7 @@ export class CamoufoxServer extends EventEmitter {
   #options = {};
   #browser = null; // Add browser tracking
   #debug = null;
+  #signalHandlersSetup = false;
 
   /**
    * Creates a new CamoufoxServer instance
@@ -76,6 +77,31 @@ export class CamoufoxServer extends EventEmitter {
       debug: options.debug ?? false,
     };
     this.#debug = createDebugLogger(options.debug ?? false);
+    
+    // Setup signal handlers for graceful shutdown
+    this.#setupSignalHandlers();
+  }
+
+  /**
+   * Setup signal handlers for graceful shutdown
+   * @private
+   */
+  #setupSignalHandlers() {
+    if (this.#signalHandlersSetup) return;
+    
+    const handleShutdown = async (signal) => {
+      this.#debug(`Received ${signal}, shutting down CamoufoxServer...`);
+      try {
+        await this.stop();
+      } catch (error) {
+        this.#debug(`Error during ${signal} shutdown: ${error.message}`);
+      }
+    };
+
+    process.on('SIGINT', handleShutdown);
+    process.on('SIGTERM', handleShutdown);
+    
+    this.#signalHandlersSetup = true;
   }
 
   /**
