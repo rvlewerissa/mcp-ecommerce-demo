@@ -6,14 +6,10 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: mcp-ecommerce-demo
-    # For headless mode, no display needed
     environment:
       - NODE_ENV=production
-      - MCP_MODE=daemon
-    # Mount volumes if you need persistent data or config
     # volumes:
     #   - ./data:/app/data
-    # If you need to expose ports (typically MCP uses stdio)
     # ports:
     #   - "3000:3000"
     # Restart policy

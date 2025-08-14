@@ -67,30 +67,15 @@ ENV PATH="/home/mcp/.local/bin:$PATH"
 # Switch back to root to copy files
 USER root
 
-# Copy test script for triggering downloads
-COPY test_imports.py ./
-
-# Switch back to mcp user to trigger downloads
-USER mcp
-
-# Pre-download browserforge data files as mcp user
-RUN python3 test_imports.py || echo "Browserforge data download completed with warnings"
-
-# Switch back to root for final setup
-USER root
-
-# Copy source code and startup script
+# Copy source code
 COPY src/ ./src/
-COPY start.sh ./
-RUN chmod +x start.sh \
-    && chown -R mcp:mcp /app \
+RUN chown -R mcp:mcp /app \
     && chmod -R 755 /app
 
 # Switch to non-root user
 USER mcp
 
-# Expose any ports if needed (though MCP typically uses stdio)
 # EXPOSE 3000
 
-# Set the default command to run the MCP server
-CMD ["./start.sh"]
+# Set the default command to run the MCP server in daemon mode
+CMD ["sh", "-c", "node src/server.js & tail -f /dev/null"]
