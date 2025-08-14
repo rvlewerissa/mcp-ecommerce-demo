@@ -20,14 +20,14 @@ async function auth({ email, password, sessionManager } = {}) {
     const page = await browser.newPage();
     await page.goto('https://www.tokopedia.com/login');
 
-    // Wait for the login input to be present and enabled
+    // Look for email input and fill it
     const emailInput = await page.waitForSelector('input[name="login"]', {
       timeout: 15000,
     });
-
     await emailInput.focus();
     await emailInput.fill(email);
 
+    // Find the submit button and click it
     const submitButton = await page.waitForSelector(
       'button[data-testid="button-submit"]',
       {
@@ -41,11 +41,10 @@ async function auth({ email, password, sessionManager } = {}) {
     const passwordInput = await page.waitForSelector('input[type="password"]', {
       timeout: 5000,
     });
-
     await passwordInput.focus();
     await passwordInput.fill(password);
 
-    // Find the submit button for password step
+    // Find the submit button and click it
     const submitPasswordButton = await page.waitForSelector(
       'button[data-testid="button-submit"]',
       {
@@ -53,12 +52,13 @@ async function auth({ email, password, sessionManager } = {}) {
       }
     );
     await submitPasswordButton.click();
+
     await page.waitForLoadState('networkidle');
 
     // Check if verification code page appears
     const headerContent = await page.textContent('div.header');
     if (headerContent && headerContent.includes('Masukkan Kode Verifikasi')) {
-      // Store session for later use
+      // Store session type to verification_pending
       sessionManager.set(sessionId, {
         server,
         browser,
@@ -76,7 +76,7 @@ async function auth({ email, password, sessionManager } = {}) {
           'Please provide the verification code using the provide_verification_code tool with this session ID',
       };
     } else {
-      // Update the existing session type to authenticated
+      // Store session type to authenticated
       sessionManager.set(sessionId, {
         server,
         browser,
@@ -114,11 +114,9 @@ async function verificationCode({
   const { page, server, browser, email } = session;
 
   try {
-    // Find and fill the OTP input field
     const otpInput = await page.waitForSelector('input[type="tel"]', {
       timeout: 10000,
     });
-
     await otpInput.focus();
     await otpInput.fill(verificationCode);
 
@@ -126,10 +124,8 @@ async function verificationCode({
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 
-    // Check if login was successful by checking URL change or success indicators
-    const currentUrl = page.url();
-
     // Check if verification was not successful
+    const currentUrl = page.url();
     if (currentUrl.includes('/login')) {
       await otpInput.fill('');
       return {

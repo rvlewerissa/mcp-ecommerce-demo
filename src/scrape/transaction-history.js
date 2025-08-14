@@ -2,18 +2,16 @@ async function transactionHistory({ session, sessionId, sessionManager } = {}) {
   const { page, server, browser, email } = session;
 
   try {
-    // Redirect to Tokopedia order list page
+    // Navigate to Tokopedia order list page
     await page.goto('https://www.tokopedia.com/order-list', {
       waitUntil: 'networkidle',
       timeout: 15000,
     });
 
-    // Wait for page to load
     await page.waitForLoadState('networkidle');
 
     // Wait for order items to load and extract real data
     let transactions = [];
-
     try {
       await page.waitForSelector('div[data-testid^="orderItem-"]', {
         timeout: 10000,
