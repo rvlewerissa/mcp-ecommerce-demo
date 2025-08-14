@@ -71,7 +71,7 @@ Search for "laptop gaming" on Tokopedia
 ### Transaction History
 
 ```
-Show my transaction history from Tokopedia (requires authentication first)
+Show my transaction history from Tokopedia
 ```
 
 ## Authentication & Session Management
@@ -195,3 +195,7 @@ Each session includes: browser instance, page context, user credentials, and aut
   "id": 1
 }
 ```
+
+## Credits
+
+- Camoufox integration to Node.js powered by [node-camoufox](https://github.com/DemonMartin/node-camoufox)
