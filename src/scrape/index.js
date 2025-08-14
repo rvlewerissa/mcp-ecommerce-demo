@@ -1,3 +1,3 @@
-export { searchTokopedia } from './search-tokopedia.js';
+export { searchTokopedia } from './searchTokopedia.js';
 export { auth, verificationCode } from './auth.js';
-export { transactionHistory } from './transaction-history.js';
+export { transactionHistory } from './transactionHistory.js';

@@ -1,4 +1,4 @@
-import { transactionHistory } from '../scrape/transaction-history.js';
+import { transactionHistory } from '../scrape/transactionHistory.js';
 
 export async function searchTransactionHistoryTool(args, activeSessions) {
   const { session_id } = args || {};

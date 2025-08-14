@@ -1,4 +1,4 @@
-import { searchTokopedia } from '../scrape/search-tokopedia.js';
+import { searchTokopedia } from '../scrape/searchTokopedia.js';
 
 export async function searchProductTool(args) {
   const {
