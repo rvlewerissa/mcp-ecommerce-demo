@@ -1,4 +1,4 @@
-import { searchTokopedia } from '../scrape/searchTokopedia.js';
+import { searchProduct } from '../scrape/searchProduct.js';
 
 export async function searchProductTool(args) {
   const {
@@ -24,7 +24,7 @@ export async function searchProductTool(args) {
   }
 
   try {
-    const scrapedProducts = await searchTokopedia({
+    const scrapedProducts = await searchProduct({
       query,
       discount,
       preorder,

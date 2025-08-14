@@ -5,10 +5,10 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import {
-  searchProductSchema,
   authSchema,
-  searchTransactionHistorySchema,
-  provideVerificationCodeSchema,
+  searchProductSchema,
+  transactionHistorySchema,
+  verificationCodeSchema,
 } from './schemas/index.js';
 import {
   searchProductTool,
@@ -37,8 +37,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       searchProductSchema,
       authSchema,
-      searchTransactionHistorySchema,
-      provideVerificationCodeSchema,
+      transactionHistorySchema,
+      verificationCodeSchema,
     ],
   };
 });

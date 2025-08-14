@@ -1,4 +1,4 @@
-export const provideVerificationCodeSchema = {
+export const verificationCodeSchema = {
   name: 'provide_verification_code',
   description: 'Provide verification code to continue authentication process',
   inputSchema: {

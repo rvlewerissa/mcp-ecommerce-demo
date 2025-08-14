@@ -3,7 +3,7 @@ import { CamoufoxServer } from '../camoufox/CamoufoxServer.js';
 
 import { gradualScrollToBottom } from '../utils/scrollUtils.js';
 
-async function searchTokopedia({
+async function searchProduct({
   query = 'laptop',
   discount = false,
   preorder = false,
@@ -137,4 +137,4 @@ async function searchTokopedia({
   }
 }
 
-export { searchTokopedia };
+export { searchProduct };
